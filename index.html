@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>CGPA Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/png" href="assets/images/cgpa.png">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#f4f6fb;
+  --bg2:#eef2ff;
+  --card:#ffffff;
+  --border:#e6e9f2;
+  --text:#1e293b;
+  --muted:#64748b;
+  --accent:#6366f1;
+  --accent-soft:#eef2ff;
+  --accent-soft-danger:#fee2e2;
+  --danger:#ef4444;
+  --success:#22c55e;
+}
+
+[data-theme="dark"]{
+  --bg:#0b1020;
+  --bg2:#060818;
+  --card:#0f172a;
+  --border:#1e293b;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --accent:#818cf8;
+  --accent-soft:#1e293b;
+  --accent-soft-danger:rgba(234, 115, 115, 0.15);
+  --success:#4ade80;
+}
+
+*{
+  box-sizing:border-box;
+  font-family: 'Google Sans', system-ui, sans-serif;
+  margin:0;
+  padding:0;
+}
+
+body{
+  background:linear-gradient(180deg,var(--bg),var(--bg2));
+  color:var(--text);
+  padding:20px;
+  min-height:100vh;
+  transition:background 0.3s ease;
+}
+
+.container{
+  width:840px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:520px 300px;
+  gap:20px;
+}
+
+.header{
+  grid-column:1 / -1;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+  flex-wrap:nowrap;
+  gap:12px;
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex:1;
+}
+
+h1{
+  font-weight:600;
+  font-size:1.8rem;
+  margin:0;
+  white-space:nowrap;
+}
+
+/* HEADER BUTTONS */
+.header-right{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-shrink:0;
+}
+
+.clear-btn{
+  background:var(--accent-soft-danger);
+  color:var(--danger);
+  border:1px solid var(--border);
+  padding:5px;
+  border-radius:10px;
+  font-weight:600;
+  font-size:0.9rem;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  height:42px;
+  width:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  flex-shrink:0;
+}
+
+.clear-btn:hover{
+  background:var(--danger);
+  color:white;
+  border-color:var(--danger);
+}
+
+.clear-btn::after{
+  content:'';
+  position:absolute;
+  width:22px;
+  height:22px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+}
+
+.clear-btn:hover::after{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
+}
+
+.theme-btn{
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.1rem;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  flex-shrink:0;
+}
+
+.theme-btn:hover{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+}
+
+/* SEMESTERS COLUMN */
+.semesters-column{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  width:520px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  transition:all 0.3s ease;
+}
+
+.semester{
+  width:100%;
+}
+
+.sem-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+}
+
+.sem-title{
+  font-size:1.3rem;
+  font-weight:600;
+  color:var(--text);
+}
+
+.term-gpa{
+  font-size:1.1rem;
+  font-weight:600;
+  color:var(--accent);
+}
+
+/* UPDATED: COURSE ROWS WITH BIGGER COURSE CODE AND 40x40 DELETE BUTTON */
+.course-row{
+  display:grid;
+  grid-template-columns:220px 100px 80px 40px; /* Increased first column, fixed last column to 40px */
+  gap:12px;
+  margin-bottom:12px;
+  align-items:center;
+}
+
+.course-input{
+  width:100%;
+  max-width:220px;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--card);
+  color:var(--text);
+  font-size:0.9rem;
+  transition:border-color 0.2s;
+  height:42px;
+  box-sizing:border-box;
+}
+
+.course-input:focus{
+  outline:none;
+  border-color:var(--accent);
+  border-width:2px;
+}
+
+/* UPDATED: Grade select and credit input now have same focus style as course-input */
+.grade-select{
+  width:100%;
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--card);
+  color:var(--text);
+  font-size:0.9rem;
+  height:42px;
+  box-sizing:border-box;
+  transition:border-color 0.2s;
+}
+
+.grade-select:focus{
+  outline:none;
+  border-color:var(--accent);
+  border-width:2px;
+}
+
+.credit-input{
+  width:100%;
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--card);
+  color:var(--text);
+  font-size:0.9rem;
+  text-align:center;
+  height:42px;
+  box-sizing:border-box;
+  transition:border-color 0.2s;
+}
+
+.credit-input:focus{
+  outline:none;
+  border-color:var(--accent);
+  border-width:2px;
+}
+
+.credit-input::-webkit-outer-spin-button,
+.credit-input::-webkit-inner-spin-button{
+  -webkit-appearance:none;
+  margin:0;
+}
+
+/* UPDATED: DELETE BUTTON - FIXED 40x40 SIZE WITH LARGER ICON FOR MOBILE */
+.del{
+  background:none;
+  border:none;
+  color:var(--danger);
+  cursor:pointer;
+  height:40px; /* Fixed height */
+  width:40px;  /* Fixed width */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  transition:background 0.2s;
+  padding:0;
+  position:relative;
+  margin:0 auto;
+}
+.del:hover{
+  background:rgba(239,68,68,0.15);
+}
+
+.del::after{
+  content:'';
+  position:absolute;
+  width:20px;  /* Desktop icon size */
+  height:20px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+}
+
+.del:hover::after{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc2626'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
+}
+
+/* BUTTONS */
+.primary-btn{
+  background:linear-gradient(180deg,var(--accent),#4f46e5);
+  color:white;
+  border:none;
+  padding:12px 20px;
+  border-radius:10px;
+  font-weight:600;
+  font-size:0.9rem;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  width:100%;
+}
+
+.primary-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(99,102,241,0.25);
+}
+
+.secondary-btn{
+  background:var(--accent-soft);
+  color:var(--accent);
+  border:none;
+  padding:10px 18px;
+  border-radius:10px;
+  font-weight:600;
+  font-size:0.9rem;
+  cursor:pointer;
+  transition:all 0.3s ease;
+}
+
+.secondary-btn:hover{
+  background:var(--accent);
+  color:white;
+}
+
+.danger-btn{
+  background:var(--accent-soft-danger);
+  color:var(--danger);
+  border:none;
+  padding:10px 18px;
+  border-radius:10px;
+  font-weight:600;
+  font-size:0.9rem;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  position:relative;
+  padding-left:40px;
+}
+
+.danger-btn:hover{
+  background:var(--danger);
+  color:white;
+}
+
+.danger-btn::before{
+  content:'';
+  position:absolute;
+  width:18px;
+  height:18px;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+}
+
+.danger-btn:hover::before{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
+}
+
+.button-group{
+  display:flex;
+  gap:10px;
+  margin-top:16px;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:300px;
+  position:sticky;
+  top:20px;
+  height:fit-content;
+}
+
+.cgpa-display{
+  font-size:1.8rem;
+  font-weight:600;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+
+/* UPDATED: Removed top and bottom borders from credits display */
+.credits-display{
+  font-size:0.95rem;
+  color:var(--success);
+  font-weight:600;
+  margin:16px 0 24px;
+  padding:0;
+}
+
+/* RESPONSIVE DESIGN FROM 900PX */
+@media(max-width:900px){
+  .container{
+    width:100%;
+    grid-template-columns:1fr;
+    max-width:100%;
+    padding:0;
+  }
+
+  .semesters-column{
+    width:100%;
+  }
+
+  .sidebar{
+    width:100%;
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    top:auto;
+    margin:0;
+    border-radius:0px;
+    z-index:1000;
+    box-shadow:0 -4px 20px rgba(0,0,0,0.1);
+  }
+
+  /* UPDATED: MOBILE ADJUSTMENTS WITH 40x40 DELETE BUTTON */
+  .course-row{
+    grid-template-columns:minmax(140px, 1fr) 100px 75px 40px;
+    gap:8px;
+    width:100%;
+    max-width:100%;
+  }
+
+  .course-input{
+    max-width:100%;
+    padding:10px 12px;
+    font-size:0.9rem;
+    height:42px;
+  }
+
+  .course-input:focus{
+    border-width:2px;
+  }
+
+  .grade-select, .credit-input{
+    padding:10px;
+    font-size:0.9rem;
+    height:42px;
+  }
+
+  .grade-select:focus, .credit-input:focus{
+    border-width:2px;
+  }
+
+  /* UPDATED: Mobile delete button - KEEP 40x40 BUT LARGER ICON */
+  .del{
+    width:40px;
+    height:40px;
+  }
+
+  /* LARGER ICON FOR MOBILE VIEW */
+  .del::after{
+    width:22px;  /* Increased from 20px for mobile */
+    height:22px; /* Increased from 20px for mobile */
+  }
+
+  body{
+    padding-bottom:220px;
+  }
+
+  .header{
+    flex-direction:row;
+    align-items:center;
+    gap:16px;
+  }
+
+  .header-left{
+    width:auto;
+    flex:1;
+  }
+
+  .header-right{
+    width:auto;
+    justify-content:flex-end;
+  }
+
+  .clear-btn{
+    width:42px;
+    height:42px;
+    font-size:0.9rem;
+    padding:5px;
+  }
+
+  .theme-btn{
+    width:42px;
+    height:42px;
+  }
+
+  /* INCREASE ADD SEMESTER BUTTON SIZE IN MOBILE */
+  .primary-btn {
+    padding:14px 20px;
+    font-size:1rem;
+    font-weight:600;
+  }
+}
+
+/* Small mobile (under 600px) */
+@media(max-width:600px){
+  body{
+    padding:16px;
+    padding-bottom:240px;
+    margin:0;
+  }
+
+  .container{
+    gap:16px;
+    margin:0;
+  }
+
+  .card{
+    padding:16px;
+  }
+
+  /* UPDATED: SMALL MOBILE ADJUSTMENTS WITH 40x40 DELETE BUTTON */
+  .course-row{
+    grid-template-columns:minmax(120px, 1fr) 95px 70px 40px;
+    gap:8px;
+    margin-bottom:12px;
+  }
+
+  .course-input{
+    max-width:100%;
+    padding:10px 12px;
+    font-size:0.9rem;
+    height:42px;
+  }
+
+  .course-input:focus{
+    border-width:2px;
+  }
+
+  .grade-select, .credit-input{
+    padding:10px;
+    font-size:0.9rem;
+    height:42px;
+  }
+
+  .grade-select:focus, .credit-input:focus{
+    border-width:2px;
+  }
+
+  /* UPDATED: Small mobile delete button - EVEN LARGER ICON */
+  .del{
+    width:40px;
+    height:40px;
+  }
+
+  /* EVEN LARGER ICON FOR SMALL MOBILE */
+  .del::after{
+    width:24px;  /* Increased from 24px for small mobile */
+    height:24px; /* Increased from 24px for small mobile */
+  }
+
+  .button-group{
+    flex-direction:row;
+    gap:8px;
+    margin-top:16px;
+  }
+
+  .header{
+    gap:12px;
+    margin-bottom:16px;
+  }
+
+  .clear-btn{
+    padding:5px;
+    font-size:0.9rem;
+    height:42px;
+    width:42px;
+  }
+
+  .theme-btn{
+    width:42px;
+    height:42px;
+    font-size:1.1rem;
+  }
+
+  .sidebar{
+    padding:18px;
+    border:0px solid var(--border);
+    border-bottom:none;
+  }
+
+  .cgpa-display{
+    font-size:1.8rem;
+    margin-bottom:8px;
+  }
+
+  .credits-display{
+    margin:14px 0 24px;
+    font-size:1rem;
+  }
+
+  .primary-btn{
+    padding:16px 20px;
+    font-size:1.1rem;
+    font-weight:600;
+  }
+
+  .secondary-btn{
+    padding:10px 14px;
+    font-size:0.9rem;
+  }
+}
+
+/* Extra small mobile */
+@media(max-width:420px){
+  .course-row{
+    grid-template-columns:minmax(100px, 1fr) 85px 60px 40px;
+    gap:6px;
+  }
+
+  .course-input{
+    padding:10px 8px;
+    font-size:0.9rem;
+    height:42px;
+  }
+
+  .course-input:focus{
+    border-width:2px;
+  }
+
+  .grade-select, .credit-input{
+    padding:10px 6px;
+    font-size:0.9rem;
+    height:42px;
+  }
+
+  .grade-select:focus, .credit-input:focus{
+    border-width:2px;
+  }
+
+  /* UPDATED: Extra small mobile delete button - MAXIMUM ICON SIZE */
+  .del{
+    width:40px;
+    height:40px;
+  }
+
+  /* MAXIMUM ICON SIZE FOR EXTRA SMALL MOBILE */
+  .del::after{
+    width:24px;  /* Increased from 26px for extra small mobile */
+    height:24px; /* Increased from 26px for extra small mobile */
+  }
+
+  body{
+    padding-bottom:230px;
+  }
+
+  .card{
+    padding:14px;
+  }
+
+  .header{
+    gap:8px;
+  }
+
+  h1{
+    font-size:1.6rem;
+  }
+
+  .clear-btn{
+    padding:5px;
+    height:40px;
+    width:45px;
+  }
+
+  .clear-btn::after{
+    width:20px;
+    height:20px;
+  }
+
+  .theme-btn{
+    width:40px;
+    height:40px;
+    font-size:1rem;
+  }
+
+  .primary-btn{
+    padding:14px 16px;
+    font-size:1rem;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h1>CGPA Calculator</h1>
+    </div>
+    <div class="header-right">
+      <!-- Clear button with delete icon -->
+      <button class="clear-btn" onclick="resetAll()" title="Clear all data"></button>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeIcon">🌙</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT - SEMESTERS -->
+  <div class="semesters-column" id="semesters">
+    <!-- Semesters will be dynamically added here -->
+  </div>
+
+  <!-- SIDEBAR - CGPA PANEL -->
+  <div class="sidebar card">
+    <div class="cgpa-display" id="cgpa">CGPA: 0.00</div>
+    <div class="credits-display">
+      TOTAL CREDITS: <span id="credits">0</span>
+    </div>
+    <button class="primary-btn" onclick="addSemester()">+ Add Semester</button>
+  </div>
+
+</div>
+
+<script>
+const gradeScale={
+  "A+":4.0,"A":3.75,"A-":3.5,
+  "B+":3.25,"B":3.0,"B-":2.75,
+  "C+":2.5,"C":2.25,"D":2.0,"F":0,
+  "R":0  // Added 'R' grade with value 0
+};
+
+const STORAGE='cgpa_final';
+const THEME='cgpa_theme';
+let data={semesters:[]};
+
+function init(){
+  const saved=localStorage.getItem(STORAGE);
+  if(saved) data=JSON.parse(saved);
+  else{
+    data.semesters=[{
+      name:'Semester 1',
+      subjects:[
+        {name:'',grade:'',credit:''},
+        {name:'',grade:'',credit:''},
+        {name:'',grade:'',credit:''}
+      ]
+    }];
+    save();
+  }
+  loadTheme();
+  updateThemeIcon();
+  render();
+}
+
+const save=()=>localStorage.setItem(STORAGE,JSON.stringify(data));
+
+function render(){
+  const box=document.getElementById('semesters');
+  box.innerHTML='';
+  data.semesters.forEach((s,i)=>{
+    const semesterDiv=document.createElement('div');
+    semesterDiv.className='card semester';
+
+    semesterDiv.innerHTML=`
+      <div class="sem-top">
+        <div class="sem-title">${s.name}</div>
+        <div class="term-gpa" id="tgpa-${i}">GPA: 0.00</div>
+      </div>
+    `;
+
+    s.subjects.forEach((sub,j)=>{
+      semesterDiv.innerHTML+=`
+        <div class="course-row">
+          <input type="text" class="course-input" placeholder="Course code" value="${escapeHtml(sub.name)}"
+            oninput="update(${i},${j},'name',this.value)">
+          <select class="grade-select" onchange="update(${i},${j},'grade',this.value)">
+            <option value="" ${!sub.grade?'selected':''}>Grade</option>
+            ${Object.keys(gradeScale).map(g=>`
+              <option value="${g}" ${sub.grade===g?'selected':''}>${g}</option>`).join('')}
+          </select>
+          <input type="number" class="credit-input" placeholder="Credit" value="${sub.grade === 'R' ? '0' : sub.credit}"
+            oninput="update(${i},${j},'credit',this.value)" min="0" max="10" step="0.5" ${sub.grade === 'R' ? 'readonly' : ''}>
+          <button class="del" onclick="deleteSubject(${i},${j})" title="Delete course"></button>
+        </div>
+      `;
+    });
+
+    semesterDiv.innerHTML+=`
+      <div class="button-group">
+        <button class="secondary-btn" onclick="addSubject(${i})">+ Add Course</button>
+        <button class="danger-btn" onclick="deleteSemester(${i})">Delete Semester</button>
+      </div>
+    `;
+
+    box.appendChild(semesterDiv);
+  });
+  updateOverallCGPA();
+  data.semesters.forEach((_,i)=>updateTermGPA(i));
+}
+
+function update(i,j,k,v){
+  // If grade is changed to 'R', automatically set credit to 0
+  if(k === 'grade' && v === 'R'){
+    data.semesters[i].subjects[j].credit = '0';
+  }
+
+  data.semesters[i].subjects[j][k]=v;
+  save();
+  updateTermGPA(i);
+  updateOverallCGPA();
+
+  // Re-render the specific row to update credit field read-only status
+  const creditInput = document.querySelectorAll('.semester')[i]?.querySelectorAll('.credit-input')[j];
+  if(creditInput && data.semesters[i].subjects[j].grade === 'R'){
+    creditInput.value = '0';
+    creditInput.readOnly = true;
+  } else if(creditInput){
+    creditInput.readOnly = false;
+  }
+}
+
+function updateTermGPA(i){
+  let totalPoints=0,totalCredits=0;
+  data.semesters[i].subjects.forEach(s=>{
+    const gradeValue = gradeScale[s.grade];
+    const creditValue = s.grade === 'R' ? 0 : parseFloat(s.credit || 0);
+
+    if(gradeValue !== undefined && creditValue !== undefined && !isNaN(creditValue)){
+      totalPoints += gradeValue * creditValue;
+      totalCredits += creditValue;
+    }
+  });
+  const gpa=totalCredits>0?(totalPoints/totalCredits).toFixed(2):'0.00';
+  document.getElementById(`tgpa-${i}`).textContent=`Term GPA: ${gpa}`;
+}
+
+function updateOverallCGPA(){
+  let totalPoints=0,totalCredits=0;
+  data.semesters.forEach(semester=>{
+    semester.subjects.forEach(subject=>{
+      const gradeValue = gradeScale[subject.grade];
+      const creditValue = subject.grade === 'R' ? 0 : parseFloat(subject.credit || 0);
+
+      if(gradeValue !== undefined && creditValue !== undefined && !isNaN(creditValue)){
+        totalPoints += gradeValue * creditValue;
+        totalCredits += creditValue;
+      }
+    });
+  });
+  const cgpa=totalCredits>0?(totalPoints/totalCredits).toFixed(2):'0.00';
+  document.getElementById('cgpa').textContent=`CGPA: ${cgpa}`;
+  document.getElementById('credits').textContent=totalCredits;
+}
+
+function addSemester(){
+  data.semesters.push({
+    name:`Semester ${data.semesters.length+1}`,
+    subjects:[
+      {name:'',grade:'',credit:''},
+      {name:'',grade:'',credit:''},
+      {name:'',grade:'',credit:''}
+    ]
+  });
+  save();
+  render();
+}
+
+function addSubject(semesterIndex){
+  data.semesters[semesterIndex].subjects.push({
+    name:'',
+    grade:'',
+    credit:''
+  });
+  save();
+  render();
+}
+
+function deleteSubject(semesterIndex, subjectIndex){
+  if(data.semesters[semesterIndex].subjects.length <= 1){
+    alert('You must have at least one course in a semester');
+    return;
+  }
+  data.semesters[semesterIndex].subjects.splice(subjectIndex,1);
+  save();
+  render();
+}
+
+function deleteSemester(index){
+  if(data.semesters.length<=1){
+    alert('You must have at least one semester');
+    return;
+  }
+  if(confirm('Are you sure you want to delete this semester?')){
+    data.semesters.splice(index,1);
+    save();
+    render();
+  }
+}
+
+function toggleTheme(){
+  const currentTheme=document.documentElement.getAttribute('data-theme');
+  const newTheme=currentTheme==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',newTheme);
+  localStorage.setItem(THEME,newTheme);
+  updateThemeIcon();
+}
+
+function updateThemeIcon(){
+  const themeIcon=document.getElementById('themeIcon');
+  const currentTheme=document.documentElement.getAttribute('data-theme');
+  themeIcon.textContent=currentTheme==='dark'?'☀️':'🌙';
+}
+
+function loadTheme(){
+  const savedTheme=localStorage.getItem(THEME)||'light';
+  document.documentElement.setAttribute('data-theme',savedTheme);
+}
+
+function resetAll(){
+  if(confirm('Are you sure you want to clear all data?')){
+    data={semesters:[{
+      name:'Semester 1',
+      subjects:[
+        {name:'',grade:'',credit:''},
+        {name:'',grade:'',credit:''},
+        {name:'',grade:'',credit:''}
+      ]
+    }]};
+    save();
+    render();
+  }
+}
+
+function escapeHtml(text){
+  const div=document.createElement('div');
+  div.textContent=text;
+  return div.innerHTML;
+}
+
+init();
+</script>
+</body>
+</html>
