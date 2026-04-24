@@ -9,52 +9,91 @@
 
 <style>
 :root{
-  --bg:#f4f6fb;
-  --bg2:#eef2ff;
-  --card:#ffffff;
-  --border:#e6e9f2;
+  --bg:#c7d2fe;
+  --bg2:#ddd6fe;
+  --card:rgba(255,255,255,0.62);
+  --border:rgba(255,255,255,0.78);
+  --border-subtle:rgba(99,102,241,0.15);
+  --input-bg:rgba(255,255,255,0.58);
   --text:#1e293b;
   --muted:#64748b;
   --accent:#6366f1;
-  --accent-soft:#eef2ff;
-  --accent-soft-danger:#fee2e2;
+  --accent-soft:rgba(99,102,241,0.1);
+  --accent-soft-danger:rgba(239,68,68,0.1);
   --danger:#ef4444;
   --success:#22c55e;
+  --success-soft:rgba(34,197,94,0.1);
+  --success-border:rgba(34,197,94,0.18);
+  --shadow:0 8px 32px rgba(99,102,241,0.14),0 2px 8px rgba(0,0,0,0.06);
+  --shadow-sm:0 2px 12px rgba(99,102,241,0.1),0 1px 4px rgba(0,0,0,0.04);
+  --blur:blur(22px) saturate(180%);
 }
 
 [data-theme="dark"]{
-  --bg:#0b1020;
-  --bg2:#060818;
-  --card:#0f172a;
-  --border:#1e293b;
+  --bg:#000000;
+  --bg2:#000000;
+  --card:rgba(255,255,255,0.05);
+  --border:rgba(255,255,255,0.09);
+  --border-subtle:rgba(129,140,248,0.18);
+  --input-bg:rgba(255,255,255,0.07);
   --text:#e5e7eb;
   --muted:#94a3b8;
   --accent:#818cf8;
-  --accent-soft:#1e293b;
-  --accent-soft-danger:rgba(234, 115, 115, 0.15);
+  --accent-soft:rgba(129,140,248,0.12);
+  --accent-soft-danger:rgba(248,113,113,0.12);
+  --danger:#f87171;
   --success:#4ade80;
+  --success-soft:rgba(74,222,128,0.12);
+  --success-border:rgba(74,222,128,0.22);
+  --shadow:0 8px 32px rgba(0,0,0,0.55),0 2px 8px rgba(0,0,0,0.35);
+  --shadow-sm:0 2px 12px rgba(0,0,0,0.4);
+  --blur:blur(22px) saturate(180%);
 }
 
+/* ── BASE ────────────────────────────────────────────── */
 *{
   box-sizing:border-box;
-  font-family: 'Google Sans', system-ui, sans-serif;
+  font-family:'Google Sans',system-ui,sans-serif;
   margin:0;
   padding:0;
 }
 
 body{
-  background:linear-gradient(180deg,var(--bg),var(--bg2));
+  background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 100%);
   color:var(--text);
   padding:20px;
   min-height:100vh;
-  transition:background 0.3s ease;
+  transition:background 0.4s ease;
+  -webkit-font-smoothing:antialiased;
 }
 
+[data-theme="dark"] body{
+  background:#000000;
+}
+
+/* subtle AMOLED depth glow so glass blur has something to catch */
+[data-theme="dark"] body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 90% 60% at 15% 10%,rgba(99,102,241,0.09) 0%,transparent 65%),
+    radial-gradient(ellipse 70% 50% at 85% 85%,rgba(129,140,248,0.06) 0%,transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+[data-theme="dark"] .container{
+  position:relative;
+  z-index:1;
+}
+
+/* ── LAYOUT ──────────────────────────────────────────── */
 .container{
-  width:840px;
+  width:812px;
   margin:0 auto;
   display:grid;
-  grid-template-columns:520px 300px;
+  grid-template-columns:492px 300px;
   gap:20px;
 }
 
@@ -76,13 +115,32 @@ body{
 }
 
 h1{
-  font-weight:600;
-  font-size:1.8rem;
+  font-family:'Outfit','Google Sans',system-ui,sans-serif;
+  font-weight:800;
+  font-size:2rem;
+  line-height:1.05;
   margin:0;
   white-space:nowrap;
+  letter-spacing:0;
+  color:var(--text);
 }
 
-/* HEADER BUTTONS */
+@supports (-webkit-background-clip:text) or (background-clip:text){
+  h1{
+    background:linear-gradient(135deg,var(--text) 0%,var(--accent) 58%,#0891b2 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    -webkit-text-fill-color:transparent;
+  }
+  [data-theme="dark"] h1{
+    background:linear-gradient(135deg,#ffffff 0%,var(--accent) 58%,#67e8f9 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+  }
+}
+
+/* ── HEADER BUTTONS ──────────────────────────────────── */
 .header-right{
   display:flex;
   gap:8px;
@@ -90,31 +148,29 @@ h1{
   flex-shrink:0;
 }
 
-.clear-btn{
-  background:var(--accent-soft-danger);
-  color:var(--danger);
-  border:1px solid var(--border);
-  padding:5px;
-  border-radius:10px;
-  font-weight:600;
-  font-size:0.9rem;
-  cursor:pointer;
-  transition:all 0.3s ease;
-  height:42px;
+/* Shared base — identical structure to .del */
+.clear-btn,
+.export-btn,
+.import-btn,
+.theme-btn{
   width:42px;
+  height:42px;
+  border-radius:13px;
+  border:1px solid var(--border);
+  background:var(--card);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  cursor:pointer;
+  transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  flex-shrink:0;
+  position:relative;
   display:flex;
   align-items:center;
   justify-content:center;
-  position:relative;
-  flex-shrink:0;
+  box-shadow:var(--shadow-sm);
 }
 
-.clear-btn:hover{
-  background:var(--danger);
-  color:white;
-  border-color:var(--danger);
-}
-
+/* Clear — trash icon */
 .clear-btn::after{
   content:'';
   position:absolute;
@@ -125,45 +181,115 @@ h1{
   background-position:center;
   background-size:contain;
 }
-
+.clear-btn:hover{
+  background:var(--danger);
+  border-color:var(--danger);
+  transform:scale(1.08);
+  box-shadow:0 6px 20px rgba(239,68,68,0.35);
+}
 .clear-btn:hover::after{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
 }
 
-.theme-btn{
-  width:42px;
-  height:42px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:var(--card);
-  color:var(--text);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.1rem;
-  cursor:pointer;
-  transition:all 0.3s ease;
-  flex-shrink:0;
+/* Export — upload arrow */
+.export-btn::after{
+  content:'';
+  position:absolute;
+  width:22px;
+  height:22px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
 }
-
-.theme-btn:hover{
-  background:var(--accent-soft);
+[data-theme="dark"] .export-btn::after{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23818cf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E");
+}
+.export-btn:hover{
+  background:var(--accent);
   border-color:var(--accent);
+  transform:scale(1.08);
+  box-shadow:0 6px 20px rgba(99,102,241,0.4);
+}
+.export-btn:hover::after{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E");
 }
 
-/* SEMESTERS COLUMN */
+/* Import — download arrow */
+.import-btn::after{
+  content:'';
+  position:absolute;
+  width:22px;
+  height:22px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='7 10 12 15 17 10'/%3E%3Cline x1='12' y1='15' x2='12' y2='3'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+}
+[data-theme="dark"] .import-btn::after{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23818cf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='7 10 12 15 17 10'/%3E%3Cline x1='12' y1='15' x2='12' y2='3'/%3E%3C/svg%3E");
+}
+.import-btn:hover{
+  background:var(--accent);
+  border-color:var(--accent);
+  transform:scale(1.08);
+  box-shadow:0 6px 20px rgba(99,102,241,0.4);
+}
+.import-btn:hover::after{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='7 10 12 15 17 10'/%3E%3Cline x1='12' y1='15' x2='12' y2='3'/%3E%3C/svg%3E");
+}
+
+/* Theme — data-mode drives which icon shows */
+.theme-btn[data-mode="light"]::after{
+  content:'';
+  position:absolute;
+  width:22px;
+  height:22px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+}
+.theme-btn[data-mode="dark"]::after{
+  content:'';
+  position:absolute;
+  width:22px;
+  height:22px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23818cf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='5'/%3E%3Cline x1='12' y1='1' x2='12' y2='3'/%3E%3Cline x1='12' y1='21' x2='12' y2='23'/%3E%3Cline x1='4.22' y1='4.22' x2='5.64' y2='5.64'/%3E%3Cline x1='18.36' y1='18.36' x2='19.78' y2='19.78'/%3E%3Cline x1='1' y1='12' x2='3' y2='12'/%3E%3Cline x1='21' y1='12' x2='23' y2='12'/%3E%3Cline x1='4.22' y1='19.78' x2='5.64' y2='18.36'/%3E%3Cline x1='18.36' y1='5.64' x2='19.78' y2='4.22'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+}
+.theme-btn:hover{
+  background:var(--accent);
+  border-color:var(--accent);
+  transform:scale(1.08);
+  box-shadow:0 6px 20px rgba(99,102,241,0.4);
+}
+.theme-btn[data-mode="light"]:hover::after{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/%3E%3C/svg%3E");
+}
+.theme-btn[data-mode="dark"]:hover::after{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='5'/%3E%3Cline x1='12' y1='1' x2='12' y2='3'/%3E%3Cline x1='12' y1='21' x2='12' y2='23'/%3E%3Cline x1='4.22' y1='4.22' x2='5.64' y2='5.64'/%3E%3Cline x1='18.36' y1='18.36' x2='19.78' y2='19.78'/%3E%3Cline x1='1' y1='12' x2='3' y2='12'/%3E%3Cline x1='21' y1='12' x2='23' y2='12'/%3E%3Cline x1='4.22' y1='19.78' x2='5.64' y2='18.36'/%3E%3Cline x1='18.36' y1='5.64' x2='19.78' y2='4.22'/%3E%3C/svg%3E");
+}
+
+/* ── SEMESTERS COLUMN ────────────────────────────────── */
 .semesters-column{
   display:flex;
   flex-direction:column;
   gap:20px;
-  width:520px;
+  width:492px;
 }
 
+/* ── GLASS CARD ──────────────────────────────────────── */
 .card{
   background:var(--card);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
   border:1px solid var(--border);
-  border-radius:16px;
+  border-radius:22px;
   padding:20px;
+  box-shadow:var(--shadow);
   transition:all 0.3s ease;
 }
 
@@ -173,90 +299,120 @@ h1{
 
 .sem-top{
   display:flex;
-  justify-content:space-between;
-  align-items:center;
+  justify-content:flex-start;
+  align-items:flex-start;
+  gap:10px;
+  flex-wrap:wrap;
   margin-bottom:16px;
 }
 
-.sem-title{
-  font-size:1.3rem;
-  font-weight:600;
-  color:var(--text);
+.sem-summary{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:8px;
+  flex-wrap:wrap;
 }
 
-.term-gpa{
-  font-size:1.1rem;
-  font-weight:600;
+.sem-title,
+.term-stat{
+  font-size:0.85rem;
+  font-weight:700;
   color:var(--accent);
+  background:var(--accent-soft);
+  padding:5px 13px;
+  border-radius:20px;
+  border:1px solid var(--border-subtle);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  letter-spacing:0;
+  white-space:nowrap;
 }
 
-/* UPDATED: COURSE ROWS WITH BIGGER COURSE CODE AND 40x40 DELETE BUTTON */
+.term-credit{
+  color:var(--accent);
+  background:var(--accent-soft);
+  border-color:var(--border-subtle);
+}
+
+/* ── COURSE ROW ──────────────────────────────────────── */
 .course-row{
   display:grid;
-  grid-template-columns:220px 100px 80px 40px; /* Increased first column, fixed last column to 40px */
+  grid-template-columns:185px 100px 80px 40px;
   gap:12px;
-  margin-bottom:12px;
+  margin-bottom:10px;
   align-items:center;
 }
 
-.course-input{
+.course-input,
+.grade-select,
+.credit-input{
   width:100%;
-  max-width:220px;
   padding:10px 14px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:var(--card);
+  border:1px solid var(--border-subtle);
+  border-radius:12px;
+  background:var(--input-bg);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
   color:var(--text);
   font-size:0.9rem;
-  transition:border-color 0.2s;
   height:42px;
   box-sizing:border-box;
+  transition:border-color 0.2s,box-shadow 0.2s;
+  font-family:'Google Sans',system-ui,sans-serif;
 }
 
-.course-input:focus{
-  outline:none;
-  border-color:var(--accent);
-  border-width:2px;
+.course-input{
+  max-width:185px;
 }
 
-/* UPDATED: Grade select and credit input now have same focus style as course-input */
 .grade-select{
-  width:100%;
   padding:10px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:var(--card);
-  color:var(--text);
-  font-size:0.9rem;
-  height:42px;
-  box-sizing:border-box;
-  transition:border-color 0.2s;
+  color-scheme:light;
 }
 
-.grade-select:focus{
-  outline:none;
-  border-color:var(--accent);
-  border-width:2px;
+[data-theme="dark"] .grade-select{
+  color-scheme:dark;
+  background:rgba(15,23,42,0.86);
+  border-color:rgba(129,140,248,0.22);
+}
+
+[data-theme="dark"] .course-input,
+[data-theme="dark"] .credit-input{
+  color-scheme:dark;
+  background:rgba(15,23,42,0.86);
+  border-color:rgba(129,140,248,0.22);
+  color:var(--text);
+}
+
+[data-theme="dark"] .grade-select option{
+  background:#111827;
+  color:#e5e7eb;
+}
+
+[data-theme="dark"] .grade-select option:checked{
+  background:#312e81;
+  color:#ffffff;
 }
 
 .credit-input{
-  width:100%;
   padding:10px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:var(--card);
-  color:var(--text);
-  font-size:0.9rem;
   text-align:center;
-  height:42px;
-  box-sizing:border-box;
-  transition:border-color 0.2s;
 }
 
+.course-input:focus,
+.grade-select:focus,
 .credit-input:focus{
   outline:none;
   border-color:var(--accent);
   border-width:2px;
+  box-shadow:0 0 0 4px rgba(99,102,241,0.12);
+}
+
+[data-theme="dark"] .course-input:focus,
+[data-theme="dark"] .grade-select:focus,
+[data-theme="dark"] .credit-input:focus{
+  box-shadow:0 0 0 4px rgba(129,140,248,0.15);
 }
 
 .credit-input::-webkit-outer-spin-button,
@@ -265,146 +421,187 @@ h1{
   margin:0;
 }
 
-/* UPDATED: DELETE BUTTON - FIXED 40x40 SIZE WITH LARGER ICON FOR MOBILE */
+/* ── DELETE BUTTON (row) ─────────────────────────────── */
 .del{
-  background:none;
-  border:none;
-  color:var(--danger);
+  background:var(--card);
+  border:1px solid var(--border);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
   cursor:pointer;
-  height:40px; /* Fixed height */
-  width:40px;  /* Fixed width */
+  height:40px;
+  width:40px;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:8px;
-  transition:background 0.2s;
+  border-radius:13px;
+  transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
   padding:0;
   position:relative;
   margin:0 auto;
+  box-shadow:var(--shadow-sm);
 }
 .del:hover{
-  background:rgba(239,68,68,0.15);
+  background:var(--danger);
+  border-color:var(--danger);
+  transform:scale(1.08);
+  box-shadow:0 6px 20px rgba(239,68,68,0.35);
 }
-
 .del::after{
   content:'';
   position:absolute;
-  width:20px;  /* Desktop icon size */
-  height:20px;
+  width:22px;
+  height:22px;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
   background-position:center;
   background-size:contain;
 }
-
 .del:hover::after{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc2626'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
-}
-
-/* BUTTONS */
-.primary-btn{
-  background:linear-gradient(180deg,var(--accent),#4f46e5);
-  color:white;
-  border:none;
-  padding:12px 20px;
-  border-radius:10px;
-  font-weight:600;
-  font-size:0.9rem;
-  cursor:pointer;
-  transition:all 0.3s ease;
-  width:100%;
-}
-
-.primary-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 6px 20px rgba(99,102,241,0.25);
-}
-
-.secondary-btn{
-  background:var(--accent-soft);
-  color:var(--accent);
-  border:none;
-  padding:10px 18px;
-  border-radius:10px;
-  font-weight:600;
-  font-size:0.9rem;
-  cursor:pointer;
-  transition:all 0.3s ease;
-}
-
-.secondary-btn:hover{
-  background:var(--accent);
-  color:white;
-}
-
-.danger-btn{
-  background:var(--accent-soft-danger);
-  color:var(--danger);
-  border:none;
-  padding:10px 18px;
-  border-radius:10px;
-  font-weight:600;
-  font-size:0.9rem;
-  cursor:pointer;
-  transition:all 0.3s ease;
-  position:relative;
-  padding-left:40px;
-}
-
-.danger-btn:hover{
-  background:var(--danger);
-  color:white;
-}
-
-.danger-btn::before{
-  content:'';
-  position:absolute;
-  width:18px;
-  height:18px;
-  left:16px;
-  top:50%;
-  transform:translateY(-50%);
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:contain;
-}
-
-.danger-btn:hover::before{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
 }
 
+[data-theme="dark"] .del{
+  background:rgba(15,23,42,0.86);
+  border-color:rgba(129,140,248,0.22);
+}
+
+[data-theme="dark"] .del:hover{
+  background:var(--danger);
+  border-color:var(--danger);
+}
+
+/* ── BUTTONS ─────────────────────────────────────────── */
+.primary-btn{
+  background:linear-gradient(135deg,var(--accent),#4f46e5);
+  color:white;
+  border:none;
+  padding:13px 20px;
+  border-radius:14px;
+  font-weight:600;
+  font-size:0.9rem;
+  cursor:pointer;
+  transition:all 0.25s ease;
+  width:100%;
+  box-shadow:0 4px 16px rgba(99,102,241,0.32);
+  font-family:'Google Sans',system-ui,sans-serif;
+}
+.primary-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 28px rgba(99,102,241,0.45);
+}
+
+.secondary-btn{
+  background:var(--card);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  color:var(--accent);
+  border:1px solid var(--border);
+  padding:10px 18px;
+  border-radius:13px;
+  font-weight:600;
+  font-size:0.9rem;
+  cursor:pointer;
+  transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:var(--shadow-sm);
+  font-family:'Google Sans',system-ui,sans-serif;
+}
+.secondary-btn:hover{
+  background:var(--accent);
+  color:white;
+  border-color:var(--accent);
+  transform:scale(1.05);
+  box-shadow:0 6px 20px rgba(99,102,241,0.4);
+}
+
+[data-theme="dark"] .secondary-btn{
+  background:rgba(15,23,42,0.86);
+  border-color:rgba(129,140,248,0.22);
+}
+
+[data-theme="dark"] .secondary-btn:hover{
+  background:var(--accent);
+  border-color:var(--accent);
+}
+
+.danger-btn{
+  background:var(--card);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  color:var(--danger);
+  border:1px solid var(--border);
+  padding:10px 18px;
+  border-radius:13px;
+  font-weight:600;
+  font-size:0.9rem;
+  cursor:pointer;
+  transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;
+  box-shadow:var(--shadow-sm);
+  font-family:'Google Sans',system-ui,sans-serif;
+}
+.danger-btn:hover{
+  background:var(--danger);
+  color:white;
+  border-color:var(--danger);
+  transform:scale(1.05);
+  box-shadow:0 6px 20px rgba(239,68,68,0.35);
+}
+
+[data-theme="dark"] .danger-btn{
+  background:rgba(15,23,42,0.86);
+  border-color:rgba(129,140,248,0.22);
+}
+
+[data-theme="dark"] .danger-btn:hover{
+  background:var(--danger);
+  border-color:var(--danger);
+}
 .button-group{
   display:flex;
   gap:10px;
   margin-top:16px;
 }
 
-/* SIDEBAR */
+/* ── SIDEBAR ─────────────────────────────────────────── */
 .sidebar{
   width:300px;
   position:sticky;
   top:20px;
   height:fit-content;
+  overflow:hidden;
+  isolation:isolate;
+  contain:paint;
+}
+
+[data-theme="dark"] .sidebar.card{
+  background:rgba(12,12,16,0.96);
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  border-color:rgba(255,255,255,0.12);
+}
+
+[data-theme="dark"] .sidebar .primary-btn{
+  box-shadow:0 4px 18px rgba(99,102,241,0.26);
 }
 
 .cgpa-display{
-  font-size:1.8rem;
-  font-weight:600;
+  font-size:2rem;
+  font-weight:700;
   color:var(--accent);
-  margin-bottom:8px;
+  margin-bottom:6px;
+  letter-spacing:0;
 }
 
-/* UPDATED: Removed top and bottom borders from credits display */
 .credits-display{
-  font-size:0.95rem;
+  font-size:0.9rem;
   color:var(--success);
   font-weight:600;
-  margin:16px 0 24px;
+  margin:14px 0 22px;
   padding:0;
+  letter-spacing:0.5px;
 }
 
-/* RESPONSIVE DESIGN FROM 900PX */
+/* ── RESPONSIVE 900px ────────────────────────────────── */
 @media(max-width:900px){
   .container{
     width:100%;
@@ -412,11 +609,9 @@ h1{
     max-width:100%;
     padding:0;
   }
-
   .semesters-column{
     width:100%;
   }
-
   .sidebar{
     width:100%;
     position:fixed;
@@ -425,277 +620,84 @@ h1{
     bottom:0;
     top:auto;
     margin:0;
-    border-radius:0px;
+    border-radius:26px 26px 0 0;
     z-index:1000;
-    box-shadow:0 -4px 20px rgba(0,0,0,0.1);
+    box-shadow:0 -4px 30px rgba(0,0,0,0.15);
   }
-
-  /* UPDATED: MOBILE ADJUSTMENTS WITH 40x40 DELETE BUTTON */
   .course-row{
-    grid-template-columns:minmax(140px, 1fr) 100px 75px 40px;
+    grid-template-columns:minmax(140px,185px) 100px 75px 40px;
     gap:8px;
     width:100%;
     max-width:100%;
   }
-
   .course-input{
     max-width:100%;
     padding:10px 12px;
     font-size:0.9rem;
     height:42px;
   }
-
-  .course-input:focus{
-    border-width:2px;
-  }
-
-  .grade-select, .credit-input{
-    padding:10px;
-    font-size:0.9rem;
-    height:42px;
-  }
-
-  .grade-select:focus, .credit-input:focus{
-    border-width:2px;
-  }
-
-  /* UPDATED: Mobile delete button - KEEP 40x40 BUT LARGER ICON */
-  .del{
-    width:40px;
-    height:40px;
-  }
-
-  /* LARGER ICON FOR MOBILE VIEW */
-  .del::after{
-    width:22px;  /* Increased from 20px for mobile */
-    height:22px; /* Increased from 20px for mobile */
-  }
-
-  body{
-    padding-bottom:220px;
-  }
-
-  .header{
-    flex-direction:row;
-    align-items:center;
-    gap:16px;
-  }
-
-  .header-left{
-    width:auto;
-    flex:1;
-  }
-
-  .header-right{
-    width:auto;
-    justify-content:flex-end;
-  }
-
-  .clear-btn{
-    width:42px;
-    height:42px;
-    font-size:0.9rem;
-    padding:5px;
-  }
-
-  .theme-btn{
-    width:42px;
-    height:42px;
-  }
-
-  /* INCREASE ADD SEMESTER BUTTON SIZE IN MOBILE */
-  .primary-btn {
-    padding:14px 20px;
-    font-size:1rem;
-    font-weight:600;
-  }
+  .course-input:focus{ border-width:2px; }
+  .grade-select,.credit-input{ padding:10px; font-size:0.9rem; height:42px; }
+  .grade-select:focus,.credit-input:focus{ border-width:2px; }
+  .del{ width:40px; height:40px; }
+  .del::after{ width:22px; height:22px; }
+  body{ padding-bottom:220px; }
+  .header{ flex-direction:row; align-items:center; gap:16px; }
+  .header-left{ width:auto; flex:1; }
+  .header-right{ width:auto; justify-content:flex-end; }
+  .clear-btn,.theme-btn,.export-btn,.import-btn{ width:42px; height:42px; }
+  .primary-btn{ padding:14px 20px; font-size:1rem; font-weight:600; }
 }
 
-/* Small mobile (under 600px) */
+/* ── RESPONSIVE 600px ────────────────────────────────── */
 @media(max-width:600px){
-  body{
-    padding:16px;
-    padding-bottom:240px;
-    margin:0;
-  }
-
-  .container{
-    gap:16px;
-    margin:0;
-  }
-
-  .card{
-    padding:16px;
-  }
-
-  /* UPDATED: SMALL MOBILE ADJUSTMENTS WITH 40x40 DELETE BUTTON */
+  body{ padding:16px; padding-bottom:240px; margin:0; }
+  .container{ gap:16px; margin:0; }
+  .card{ padding:16px; }
   .course-row{
-    grid-template-columns:minmax(120px, 1fr) 95px 70px 40px;
+    grid-template-columns:minmax(120px,170px) 95px 70px 40px;
     gap:8px;
     margin-bottom:12px;
   }
-
-  .course-input{
-    max-width:100%;
-    padding:10px 12px;
-    font-size:0.9rem;
-    height:42px;
-  }
-
-  .course-input:focus{
-    border-width:2px;
-  }
-
-  .grade-select, .credit-input{
-    padding:10px;
-    font-size:0.9rem;
-    height:42px;
-  }
-
-  .grade-select:focus, .credit-input:focus{
-    border-width:2px;
-  }
-
-  /* UPDATED: Small mobile delete button - EVEN LARGER ICON */
-  .del{
-    width:40px;
-    height:40px;
-  }
-
-  /* EVEN LARGER ICON FOR SMALL MOBILE */
-  .del::after{
-    width:24px;  /* Increased from 24px for small mobile */
-    height:24px; /* Increased from 24px for small mobile */
-  }
-
-  .button-group{
-    flex-direction:row;
-    gap:8px;
-    margin-top:16px;
-  }
-
-  .header{
-    gap:12px;
-    margin-bottom:16px;
-  }
-
-  .clear-btn{
-    padding:5px;
-    font-size:0.9rem;
-    height:42px;
-    width:42px;
-  }
-
-  .theme-btn{
-    width:42px;
-    height:42px;
-    font-size:1.1rem;
-  }
-
-  .sidebar{
-    padding:18px;
-    border:0px solid var(--border);
-    border-bottom:none;
-  }
-
-  .cgpa-display{
-    font-size:1.8rem;
-    margin-bottom:8px;
-  }
-
-  .credits-display{
-    margin:14px 0 24px;
-    font-size:1rem;
-  }
-
-  .primary-btn{
-    padding:16px 20px;
-    font-size:1.1rem;
-    font-weight:600;
-  }
-
-  .secondary-btn{
-    padding:10px 14px;
-    font-size:0.9rem;
-  }
+  .course-input{ max-width:100%; padding:10px 12px; font-size:0.9rem; height:42px; }
+  .course-input:focus{ border-width:2px; }
+  .grade-select,.credit-input{ padding:10px; font-size:0.9rem; height:42px; }
+  .grade-select:focus,.credit-input:focus{ border-width:2px; }
+  .del{ width:40px; height:40px; }
+  .del::after{ width:22px; height:22px; }
+  .button-group{ flex-direction:row; gap:8px; margin-top:16px; }
+  .header{ gap:12px; margin-bottom:16px; }
+  .clear-btn,.theme-btn,.export-btn,.import-btn{ padding:5px; height:42px; width:42px; }
+  .sidebar{ padding:18px; border:0px solid var(--border); border-bottom:none; border-radius:26px 26px 0 0; }
+  .cgpa-display{ font-size:1.8rem; margin-bottom:8px; }
+  .credits-display{ margin:14px 0 24px; font-size:1rem; }
+  .primary-btn{ padding:16px 20px; font-size:1.1rem; font-weight:600; }
+  .secondary-btn{ padding:10px 14px; font-size:0.9rem; }
 }
 
-/* Extra small mobile */
+/* ── RESPONSIVE 420px ────────────────────────────────── */
 @media(max-width:420px){
-  .course-row{
-    grid-template-columns:minmax(100px, 1fr) 85px 60px 40px;
-    gap:6px;
-  }
-
-  .course-input{
-    padding:10px 8px;
-    font-size:0.9rem;
-    height:42px;
-  }
-
-  .course-input:focus{
-    border-width:2px;
-  }
-
-  .grade-select, .credit-input{
-    padding:10px 6px;
-    font-size:0.9rem;
-    height:42px;
-  }
-
-  .grade-select:focus, .credit-input:focus{
-    border-width:2px;
-  }
-
-  /* UPDATED: Extra small mobile delete button - MAXIMUM ICON SIZE */
-  .del{
-    width:40px;
-    height:40px;
-  }
-
-  /* MAXIMUM ICON SIZE FOR EXTRA SMALL MOBILE */
-  .del::after{
-    width:24px;  /* Increased from 26px for extra small mobile */
-    height:24px; /* Increased from 26px for extra small mobile */
-  }
-
-  body{
-    padding-bottom:230px;
-  }
-
-  .card{
-    padding:14px;
-  }
-
-  .header{
-    gap:8px;
-  }
-
-  h1{
-    font-size:1.6rem;
-  }
-
-  .clear-btn{
-    padding:5px;
-    height:40px;
-    width:45px;
-  }
-
-  .clear-btn::after{
-    width:20px;
-    height:20px;
-  }
-
-  .theme-btn{
-    width:40px;
-    height:40px;
-    font-size:1rem;
-  }
-
-  .primary-btn{
-    padding:14px 16px;
-    font-size:1rem;
-  }
+  .course-row{ grid-template-columns:minmax(100px,155px) 85px 60px 40px; gap:6px; }
+  .course-input{ padding:10px 8px; font-size:0.9rem; height:42px; }
+  .course-input:focus{ border-width:2px; }
+  .grade-select,.credit-input{ padding:10px 6px; font-size:0.9rem; height:42px; }
+  .grade-select:focus,.credit-input:focus{ border-width:2px; }
+  .del{ width:40px; height:40px; }
+  .del::after{ width:22px; height:22px; }
+  body{ padding-bottom:230px; }
+  .card{ padding:14px; }
+  .header{ gap:8px; }
+  h1{ font-size:1.4rem; }
+  .sem-summary{ justify-content:flex-start; }
+  .sem-title,
+  .term-stat{ font-size:0.78rem; padding:5px 10px; }
+  .clear-btn,.theme-btn,.export-btn,.import-btn{ padding:5px; height:40px; width:40px; }
+  .clear-btn::after,
+  .export-btn::after,
+  .import-btn::after,
+  .theme-btn[data-mode="light"]::after,
+  .theme-btn[data-mode="dark"]::after{ width:20px; height:20px; }
+  .primary-btn{ padding:14px 16px; font-size:1rem; }
 }
 </style>
 </head>
@@ -709,9 +711,15 @@ h1{
       <h1>CGPA Calculator</h1>
     </div>
     <div class="header-right">
-      <!-- Clear button with delete icon -->
+      <!-- Import button -->
+      <button class="import-btn" onclick="document.getElementById('importFile').click()" title="Import data"></button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      <!-- Export button -->
+      <button class="export-btn" onclick="exportData()" title="Export data"></button>
+      <!-- Clear button -->
       <button class="clear-btn" onclick="resetAll()" title="Clear all data"></button>
-      <button class="theme-btn" onclick="toggleTheme()" id="themeIcon">🌙</button>
+      <!-- Theme button -->
+      <button class="theme-btn" onclick="toggleTheme()" id="themeIcon" data-mode="light"></button>
     </div>
   </div>
 
@@ -726,7 +734,7 @@ h1{
     <div class="credits-display">
       TOTAL CREDITS: <span id="credits">0</span>
     </div>
-    <button class="primary-btn" onclick="addSemester()">+ Add Semester</button>
+    <button class="primary-btn" onclick="addSemester()">Add Semester</button>
   </div>
 
 </div>
@@ -743,6 +751,14 @@ const STORAGE='cgpa_final';
 const THEME='cgpa_theme';
 let data={semesters:[]};
 
+function normalizeSemesterNames(){
+  if(!Array.isArray(data.semesters)) data.semesters=[];
+  data.semesters.forEach((semester,i)=>{
+    semester.name=`Semester ${i+1}`;
+    if(!Array.isArray(semester.subjects)) semester.subjects=[];
+  });
+}
+
 function init(){
   const saved=localStorage.getItem(STORAGE);
   if(saved) data=JSON.parse(saved);
@@ -757,12 +773,17 @@ function init(){
     }];
     save();
   }
+  normalizeSemesterNames();
+  save();
   loadTheme();
   updateThemeIcon();
   render();
 }
 
-const save=()=>localStorage.setItem(STORAGE,JSON.stringify(data));
+const save=()=>{
+  normalizeSemesterNames();
+  localStorage.setItem(STORAGE,JSON.stringify(data));
+};
 
 function render(){
   const box=document.getElementById('semesters');
@@ -773,22 +794,26 @@ function render(){
 
     semesterDiv.innerHTML=`
       <div class="sem-top">
-        <div class="sem-title">${s.name}</div>
-        <div class="term-gpa" id="tgpa-${i}">GPA: 0.00</div>
+        <div class="sem-summary">
+          <div class="sem-title">${escapeHtml(s.name)}</div>
+          <div class="term-stat term-credit" id="tcredits-${i}">Credit: 0</div>
+          <div class="term-stat term-gpa" id="tgpa-${i}">Term GPA: 0.00</div>
+          <div class="term-stat term-cgpa" id="tcgpa-${i}">CGPA: 0.00</div>
+        </div>
       </div>
     `;
 
     s.subjects.forEach((sub,j)=>{
       semesterDiv.innerHTML+=`
         <div class="course-row">
-          <input type="text" class="course-input" placeholder="Course code" value="${escapeHtml(sub.name)}"
+          <input type="text" class="course-input" placeholder="COURSE CODE" value="${escapeHtml(sub.name)}"
             oninput="update(${i},${j},'name',this.value)">
           <select class="grade-select" onchange="update(${i},${j},'grade',this.value)">
-            <option value="" ${!sub.grade?'selected':''}>Grade</option>
+            <option value="" ${!sub.grade?'selected':''}>GRADE</option>
             ${Object.keys(gradeScale).map(g=>`
               <option value="${g}" ${sub.grade===g?'selected':''}>${g}</option>`).join('')}
           </select>
-          <input type="number" class="credit-input" placeholder="Credit" value="${sub.grade === 'R' ? '0' : sub.credit}"
+          <input type="number" class="credit-input" placeholder="CREDIT" value="${sub.grade === 'R' ? '0' : sub.credit}"
             oninput="update(${i},${j},'credit',this.value)" min="0" max="10" step="0.5" ${sub.grade === 'R' ? 'readonly' : ''}>
           <button class="del" onclick="deleteSubject(${i},${j})" title="Delete course"></button>
         </div>
@@ -797,15 +822,15 @@ function render(){
 
     semesterDiv.innerHTML+=`
       <div class="button-group">
-        <button class="secondary-btn" onclick="addSubject(${i})">+ Add Course</button>
+        <button class="secondary-btn" onclick="addSubject(${i})">Add Course</button>
         <button class="danger-btn" onclick="deleteSemester(${i})">Delete Semester</button>
       </div>
     `;
 
     box.appendChild(semesterDiv);
   });
+  updateSemesterSummaries();
   updateOverallCGPA();
-  data.semesters.forEach((_,i)=>updateTermGPA(i));
 }
 
 function update(i,j,k,v){
@@ -816,7 +841,7 @@ function update(i,j,k,v){
 
   data.semesters[i].subjects[j][k]=v;
   save();
-  updateTermGPA(i);
+  updateSemesterSummaries();
   updateOverallCGPA();
 
   // Re-render the specific row to update credit field read-only status
@@ -829,9 +854,9 @@ function update(i,j,k,v){
   }
 }
 
-function updateTermGPA(i){
+function getSemesterTotals(semester){
   let totalPoints=0,totalCredits=0;
-  data.semesters[i].subjects.forEach(s=>{
+  (semester.subjects || []).forEach(s=>{
     const gradeValue = gradeScale[s.grade];
     const creditValue = s.grade === 'R' ? 0 : parseFloat(s.credit || 0);
 
@@ -840,26 +865,43 @@ function updateTermGPA(i){
       totalCredits += creditValue;
     }
   });
-  const gpa=totalCredits>0?(totalPoints/totalCredits).toFixed(2):'0.00';
-  document.getElementById(`tgpa-${i}`).textContent=`Term GPA: ${gpa}`;
+  return {totalPoints,totalCredits};
+}
+
+function formatCredits(value){
+  return Number.isInteger(value) ? `${value}` : `${parseFloat(value.toFixed(2))}`;
+}
+
+function updateSemesterSummaries(){
+  let cumulativePoints=0,cumulativeCredits=0;
+
+  data.semesters.forEach((semester,i)=>{
+    const {totalPoints,totalCredits}=getSemesterTotals(semester);
+    cumulativePoints += totalPoints;
+    cumulativeCredits += totalCredits;
+
+    const termGPA=totalCredits>0?(totalPoints/totalCredits).toFixed(2):'0.00';
+    const cumulativeCGPA=cumulativeCredits>0?(cumulativePoints/cumulativeCredits).toFixed(2):'0.00';
+    const creditEl=document.getElementById(`tcredits-${i}`);
+    const termEl=document.getElementById(`tgpa-${i}`);
+    const cgpaEl=document.getElementById(`tcgpa-${i}`);
+
+    if(creditEl) creditEl.textContent=`Credit: ${formatCredits(totalCredits)}`;
+    if(termEl) termEl.textContent=`Term GPA: ${termGPA}`;
+    if(cgpaEl) cgpaEl.textContent=`CGPA: ${cumulativeCGPA}`;
+  });
 }
 
 function updateOverallCGPA(){
   let totalPoints=0,totalCredits=0;
   data.semesters.forEach(semester=>{
-    semester.subjects.forEach(subject=>{
-      const gradeValue = gradeScale[subject.grade];
-      const creditValue = subject.grade === 'R' ? 0 : parseFloat(subject.credit || 0);
-
-      if(gradeValue !== undefined && creditValue !== undefined && !isNaN(creditValue)){
-        totalPoints += gradeValue * creditValue;
-        totalCredits += creditValue;
-      }
-    });
+    const totals=getSemesterTotals(semester);
+    totalPoints += totals.totalPoints;
+    totalCredits += totals.totalCredits;
   });
   const cgpa=totalCredits>0?(totalPoints/totalCredits).toFixed(2):'0.00';
   document.getElementById('cgpa').textContent=`CGPA: ${cgpa}`;
-  document.getElementById('credits').textContent=totalCredits;
+  document.getElementById('credits').textContent=formatCredits(totalCredits);
 }
 
 function addSemester(){
@@ -918,7 +960,7 @@ function toggleTheme(){
 function updateThemeIcon(){
   const themeIcon=document.getElementById('themeIcon');
   const currentTheme=document.documentElement.getAttribute('data-theme');
-  themeIcon.textContent=currentTheme==='dark'?'☀️':'🌙';
+  themeIcon.setAttribute('data-mode', currentTheme==='dark' ? 'dark' : 'light');
 }
 
 function loadTheme(){
@@ -939,6 +981,42 @@ function resetAll(){
     save();
     render();
   }
+}
+
+function exportData(){
+  const json=JSON.stringify(data,null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const date=new Date().toISOString().slice(0,10);
+  a.href=url;
+  a.download=`CGPA_data_${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event){
+  const file=event.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const imported=JSON.parse(e.target.result);
+      if(!imported.semesters || !Array.isArray(imported.semesters)){
+        alert('Invalid file format. Please select a valid CGPA data JSON file.');
+        return;
+      }
+      if(confirm('This will replace your current data. Continue?')){
+        data=imported;
+        save();
+        render();
+      }
+    }catch(err){
+      alert('Failed to read file. Please make sure it is a valid JSON file.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value='';
 }
 
 function escapeHtml(text){
