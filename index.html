@@ -4,8 +4,9 @@
 <meta charset="UTF-8" />
 <title>CGPA Calculator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="icon" type="image/png" href="assets/images/favicon.ico">
+<link rel="icon" type="image/png" href="assets/images/cgpa.png">
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
 <style>
 :root{
   --bg:#c7d2fe;
@@ -108,9 +109,15 @@ body{
 
 .header-left{
   display:flex;
-  align-items:center;
+  align-items:flex-start;
   gap:12px;
   flex:1;
+}
+
+.title-block{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
 }
 
 h1{
@@ -139,6 +146,26 @@ h1{
   }
 }
 
+.policy-link{
+  width:max-content;
+  border:1px solid var(--border-subtle);
+  border-radius:999px;
+  background:var(--accent-soft);
+  color:var(--accent);
+  padding:4px 12px;
+  font-size:0.78rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.policy-link:hover{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:white;
+  transform:scale(1.04);
+}
+
 /* ── HEADER BUTTONS ──────────────────────────────────── */
 .header-right{
   display:flex;
@@ -149,6 +176,7 @@ h1{
 
 /* Shared base — identical structure to .del */
 .clear-btn,
+.settings-btn,
 .export-btn,
 .import-btn,
 .theme-btn{
@@ -188,6 +216,29 @@ h1{
 }
 .clear-btn:hover::after{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
+}
+
+.settings-btn::after{
+  content:'';
+  position:absolute;
+  width:22px;
+  height:22px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='4' y1='21' x2='4' y2='14'/%3E%3Cline x1='4' y1='10' x2='4' y2='3'/%3E%3Cline x1='12' y1='21' x2='12' y2='12'/%3E%3Cline x1='12' y1='8' x2='12' y2='3'/%3E%3Cline x1='20' y1='21' x2='20' y2='16'/%3E%3Cline x1='20' y1='12' x2='20' y2='3'/%3E%3Cline x1='1' y1='14' x2='7' y2='14'/%3E%3Cline x1='9' y1='8' x2='15' y2='8'/%3E%3Cline x1='17' y1='16' x2='23' y2='16'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+}
+[data-theme="dark"] .settings-btn::after{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23818cf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='4' y1='21' x2='4' y2='14'/%3E%3Cline x1='4' y1='10' x2='4' y2='3'/%3E%3Cline x1='12' y1='21' x2='12' y2='12'/%3E%3Cline x1='12' y1='8' x2='12' y2='3'/%3E%3Cline x1='20' y1='21' x2='20' y2='16'/%3E%3Cline x1='20' y1='12' x2='20' y2='3'/%3E%3Cline x1='1' y1='14' x2='7' y2='14'/%3E%3Cline x1='9' y1='8' x2='15' y2='8'/%3E%3Cline x1='17' y1='16' x2='23' y2='16'/%3E%3C/svg%3E");
+}
+.settings-btn:hover{
+  background:var(--accent);
+  border-color:var(--accent);
+  transform:scale(1.08);
+  box-shadow:0 6px 20px rgba(99,102,241,0.4);
+}
+.settings-btn:hover::after{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='4' y1='21' x2='4' y2='14'/%3E%3Cline x1='4' y1='10' x2='4' y2='3'/%3E%3Cline x1='12' y1='21' x2='12' y2='12'/%3E%3Cline x1='12' y1='8' x2='12' y2='3'/%3E%3Cline x1='20' y1='21' x2='20' y2='16'/%3E%3Cline x1='20' y1='12' x2='20' y2='3'/%3E%3Cline x1='1' y1='14' x2='7' y2='14'/%3E%3Cline x1='9' y1='8' x2='15' y2='8'/%3E%3Cline x1='17' y1='16' x2='23' y2='16'/%3E%3C/svg%3E");
 }
 
 /* Export — upload arrow */
@@ -479,14 +530,18 @@ h1{
   font-weight:600;
   font-size:0.9rem;
   cursor:pointer;
-  transition:all 0.25s ease;
+  transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
   width:100%;
   box-shadow:0 4px 16px rgba(99,102,241,0.32);
   font-family:'Google Sans',system-ui,sans-serif;
 }
 .primary-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 8px 28px rgba(99,102,241,0.45);
+  background:linear-gradient(135deg,#4f46e5,#3730a3);
+  transform:scale(1.03);
+  box-shadow:0 8px 28px rgba(79,70,229,0.48);
+}
+.primary-btn:active{
+  transform:scale(0.98);
 }
 
 .secondary-btn{
@@ -600,6 +655,190 @@ h1{
   letter-spacing:0.5px;
 }
 
+.settings-overlay{
+  position:fixed;
+  inset:0;
+  z-index:2000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(15,23,42,0.35);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+
+.settings-overlay.active{
+  display:flex;
+}
+
+.settings-card{
+  width:min(520px,100%);
+  max-height:calc(100vh - 40px);
+  overflow:auto;
+  background:var(--card);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  border:1px solid var(--border);
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  padding:20px;
+}
+
+[data-theme="dark"] .settings-card{
+  background:var(--card);
+  border-color:var(--border);
+}
+
+.settings-head,
+.settings-actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.settings-head{
+  margin-bottom:16px;
+}
+
+.settings-title{
+  font-size:1.2rem;
+  font-weight:700;
+  color:var(--text);
+}
+
+.settings-close,
+.grade-remove{
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--muted);
+  border-radius:12px;
+  cursor:pointer;
+  transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.settings-close{
+  width:38px;
+  height:38px;
+}
+
+.settings-close::before,
+.settings-close::after{
+  content:'';
+  position:absolute;
+  width:17px;
+  height:2px;
+  border-radius:999px;
+  background:var(--muted);
+}
+
+.settings-close::before{
+  transform:rotate(45deg);
+}
+
+.settings-close::after{
+  transform:rotate(-45deg);
+}
+
+.settings-close:hover,
+.grade-remove:hover{
+  background:var(--danger);
+  border-color:var(--danger);
+  color:white;
+}
+
+.settings-close:hover::before,
+.settings-close:hover::after{
+  background:white;
+}
+
+.preset-row{
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:12px;
+  align-items:center;
+  margin-bottom:14px;
+}
+
+.preset-row label{
+  font-weight:700;
+  color:var(--muted);
+  font-size:0.85rem;
+}
+
+.settings-select,
+.setting-input{
+  width:100%;
+  height:40px;
+  border:1px solid var(--border-subtle);
+  border-radius:12px;
+  background:var(--input-bg);
+  color:var(--text);
+  padding:8px 12px;
+  font-size:0.9rem;
+}
+
+[data-theme="dark"] .settings-select,
+[data-theme="dark"] .setting-input{
+  color-scheme:dark;
+  background:rgba(15,23,42,0.86);
+  border-color:var(--border-subtle);
+}
+
+.grade-settings-head,
+.grade-setting-row{
+  display:grid;
+  grid-template-columns:90px 230px 90px 42px;
+  gap:8px;
+  align-items:center;
+}
+
+.grade-settings-head{
+  color:var(--muted);
+  font-size:0.78rem;
+  font-weight:700;
+  margin-bottom:8px;
+  padding:0 2px;
+}
+
+.grade-setting-row{
+  margin-bottom:8px;
+}
+
+.grade-remove{
+  width:40px;
+  height:40px;
+}
+
+.grade-remove::after{
+  content:'';
+  position:absolute;
+  width:20px;
+  height:20px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ef4444'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+}
+
+.grade-remove:hover::after{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/%3E%3C/svg%3E");
+}
+
+.settings-actions .secondary-btn{
+  min-width:130px;
+  white-space:nowrap;
+}
+
+.settings-actions{
+  margin-top:16px;
+}
+
 /* ── RESPONSIVE 900px ────────────────────────────────── */
 @media(max-width:900px){
   .container{
@@ -644,7 +883,7 @@ h1{
   .header{ flex-direction:row; align-items:center; gap:16px; }
   .header-left{ width:auto; flex:1; }
   .header-right{ width:auto; justify-content:flex-end; }
-  .clear-btn,.theme-btn,.export-btn,.import-btn{ width:42px; height:42px; }
+  .clear-btn,.settings-btn,.theme-btn,.export-btn,.import-btn{ width:42px; height:42px; }
   .primary-btn{ padding:14px 20px; font-size:1rem; font-weight:600; }
 }
 
@@ -666,12 +905,19 @@ h1{
   .del::after{ width:22px; height:22px; }
   .button-group{ flex-direction:row; gap:8px; margin-top:16px; }
   .header{ gap:12px; margin-bottom:16px; }
-  .clear-btn,.theme-btn,.export-btn,.import-btn{ padding:5px; height:42px; width:42px; }
+  .clear-btn,.settings-btn,.theme-btn,.export-btn,.import-btn{ padding:5px; height:42px; width:42px; }
   .sidebar{ padding:18px; border:0px solid var(--border); border-bottom:none; border-radius:26px 26px 0 0; }
   .cgpa-display{ font-size:1.8rem; margin-bottom:8px; }
   .credits-display{ margin:14px 0 24px; font-size:1rem; }
   .primary-btn{ padding:16px 20px; font-size:1.1rem; font-weight:600; }
   .secondary-btn{ padding:10px 14px; font-size:0.9rem; }
+  .settings-overlay{ padding:12px; }
+  .settings-card{ padding:16px; }
+  .preset-row{ grid-template-columns:1fr; gap:8px; }
+  .grade-settings-head,
+  .grade-setting-row{ grid-template-columns:70px minmax(120px,1fr) 70px 40px; gap:6px; }
+  .settings-actions{ gap:8px; }
+  .settings-actions .secondary-btn{ min-width:112px; }
 }
 
 /* ── RESPONSIVE 420px ────────────────────────────────── */
@@ -690,8 +936,9 @@ h1{
   .sem-summary{ justify-content:flex-start; }
   .sem-title,
   .term-stat{ font-size:0.78rem; padding:5px 10px; }
-  .clear-btn,.theme-btn,.export-btn,.import-btn{ padding:5px; height:40px; width:40px; }
+  .clear-btn,.settings-btn,.theme-btn,.export-btn,.import-btn{ padding:5px; height:40px; width:40px; }
   .clear-btn::after,
+  .settings-btn::after,
   .export-btn::after,
   .import-btn::after,
   .theme-btn[data-mode="light"]::after,
@@ -707,7 +954,10 @@ h1{
   <!-- HEADER -->
   <div class="header">
     <div class="header-left">
-      <h1>CGPA Calculator</h1>
+      <div class="title-block">
+        <h1>CGPA Calculator</h1>
+        <button class="policy-link" id="policyBadge" onclick="openSettings()">Grading policy: PUBLIC</button>
+      </div>
     </div>
     <div class="header-right">
       <!-- Import button -->
@@ -715,8 +965,8 @@ h1{
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
       <!-- Export button -->
       <button class="export-btn" onclick="exportData()" title="Export data"></button>
-      <!-- Clear button -->
-      <button class="clear-btn" onclick="resetAll()" title="Clear all data"></button>
+      <!-- Settings button -->
+      <button class="settings-btn" onclick="openSettings()" title="Grading settings"></button>
       <!-- Theme button -->
       <button class="theme-btn" onclick="toggleTheme()" id="themeIcon" data-mode="light"></button>
     </div>
@@ -738,20 +988,153 @@ h1{
 
 </div>
 
-<script>
-const gradeScale={
-  "A+":4.0,"A":3.75,"A-":3.5,
-  "B+":3.25,"B":3.0,"B-":2.75,
-  "C+":2.5,"C":2.25,"D":2.0,"F":0,
-  "R":0  // Added 'R' grade with value 0
-};
+<div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
+  <div class="settings-card">
+    <div class="settings-head">
+      <div class="settings-title">Grading Settings</div>
+      <button class="settings-close" onclick="closeSettings()" title="Close" aria-label="Close settings"></button>
+    </div>
+    <div class="preset-row">
+      <label for="policyPreset">Preset</label>
+      <select class="settings-select" id="policyPreset" onchange="selectPolicyPreset(this.value)"></select>
+    </div>
+    <div class="grade-settings-head">
+      <div>Grade</div>
+      <div>Range</div>
+      <div>Point</div>
+      <div></div>
+    </div>
+    <div id="gradeSettingsRows"></div>
+    <div class="settings-actions">
+      <button class="secondary-btn" onclick="addGradeSettingRow()">Add Grade</button>
+      <button class="primary-btn" onclick="saveGradingSettings()">Save Settings</button>
+    </div>
+  </div>
+</div>
 
+<script>
 const STORAGE='cgpa_final';
 const THEME='cgpa_theme';
+const DEFAULT_POLICY='PUBLIC';
 let data={semesters:[]};
+let settingsDraft=null;
+
+const GRADING_PRESETS={
+  PUBLIC:{name:'Bangladesh Public University',short:'PUBLIC',grades:[
+    {grade:'A+',range:'80 - 100',point:4.00},{grade:'A',range:'75 - 79',point:3.75},{grade:'A-',range:'70 - 74',point:3.50},
+    {grade:'B+',range:'65 - 69',point:3.25},{grade:'B',range:'60 - 64',point:3.00},{grade:'B-',range:'55 - 59',point:2.75},
+    {grade:'C+',range:'50 - 54',point:2.50},{grade:'C',range:'45 - 49',point:2.25},{grade:'D',range:'40 - 44',point:2.00},{grade:'F',range:'0 - 39',point:0.00}
+  ]},
+  EWU:{name:'East West University',short:'EWU',grades:[
+    {grade:'A+',range:'80 - 100',point:4.00},{grade:'A',range:'75 - 80',point:3.75},{grade:'A-',range:'70 - 75',point:3.50},
+    {grade:'B+',range:'65 - 70',point:3.25},{grade:'B',range:'60 - 65',point:3.00},{grade:'B-',range:'55 - 60',point:2.75},
+    {grade:'C+',range:'50 - 55',point:2.50},{grade:'C',range:'45 - 50',point:2.25},{grade:'D',range:'40 - 45',point:2.00},{grade:'F',range:'< 40',point:0.00}
+  ]},
+  NSU:{name:'North South University',short:'NSU',grades:[
+    {grade:'A',range:'93 - 100',point:4.00},{grade:'A-',range:'90 - 92',point:3.70},{grade:'B+',range:'87 - 89',point:3.30},
+    {grade:'B',range:'83 - 86',point:3.00},{grade:'B-',range:'80 - 82',point:2.70},{grade:'C+',range:'77 - 79',point:2.30},
+    {grade:'C',range:'73 - 76',point:2.00},{grade:'C-',range:'70 - 72',point:1.70},{grade:'D+',range:'67 - 69',point:1.30},{grade:'D',range:'60 - 66',point:1.00},{grade:'F',range:'0 - 59',point:0.00}
+  ]},
+  BRAC:{name:'Brac University',short:'BRAC',grades:[
+    {grade:'A+',range:'97 - 100',point:4.00},{grade:'A',range:'90 - <97',point:4.00},{grade:'A-',range:'85 - <90',point:3.70},
+    {grade:'B+',range:'80 - <85',point:3.30},{grade:'B',range:'75 - <80',point:3.00},{grade:'B-',range:'70 - <75',point:2.70},
+    {grade:'C+',range:'65 - <70',point:2.30},{grade:'C',range:'60 - <65',point:2.00},{grade:'C-',range:'57 - <60',point:1.70},
+    {grade:'D+',range:'55 - <57',point:1.30},{grade:'D',range:'52 - <55',point:1.00},{grade:'D-',range:'50 - <52',point:0.70},{grade:'F',range:'<50',point:0.00}
+  ]},
+  AUST:{name:'Ahsanullah University of Science and Technology',short:'AUST',grades:[
+    {grade:'A+',range:'80 - 100',point:4.00},{grade:'A',range:'75 - 80',point:3.75},{grade:'A-',range:'70 - 75',point:3.50},
+    {grade:'B+',range:'65 - 70',point:3.25},{grade:'B',range:'60 - 65',point:3.00},{grade:'B-',range:'55 - 60',point:2.75},
+    {grade:'C+',range:'50 - 55',point:2.50},{grade:'C',range:'45 - 50',point:2.25},{grade:'D',range:'40 - 45',point:2.00},{grade:'F',range:'0 - 39',point:0.00}
+  ]},
+  AIUB:{name:'American International University',short:'AIUB',grades:[
+    {grade:'A+',range:'90 - 100',point:4.00},{grade:'A',range:'85 - <90',point:3.75},{grade:'B+',range:'80 - <85',point:3.50},
+    {grade:'B',range:'75 - <80',point:3.25},{grade:'C+',range:'70 - <75',point:3.00},{grade:'C',range:'65 - <70',point:2.75},
+    {grade:'D+',range:'60 - <65',point:2.50},{grade:'D',range:'50 - <60',point:2.25},{grade:'F',range:'<50',point:0.00}
+  ]},
+  IUB:{name:'Independent University',short:'IUB',grades:[
+    {grade:'A',range:'90 - 100',point:4.00},{grade:'A-',range:'85 - 90',point:3.70},{grade:'B+',range:'80 - 85',point:3.30},
+    {grade:'B',range:'75 - 80',point:3.00},{grade:'B-',range:'70 - 75',point:2.70},{grade:'C+',range:'65 - 70',point:2.30},
+    {grade:'C',range:'60 - 65',point:2.00},{grade:'C-',range:'55 - 60',point:1.70},{grade:'D+',range:'50 - 55',point:1.30},{grade:'D',range:'45 - 50',point:1.00},{grade:'F',range:'0 - 44',point:0.00}
+  ]},
+  UIU:{name:'United International University',short:'UIU',grades:[
+    {grade:'A',range:'90 - 100',point:4.00},{grade:'A-',range:'86 - 89',point:3.67},{grade:'B+',range:'82 - 85',point:3.33},
+    {grade:'B',range:'78 - 81',point:3.00},{grade:'B-',range:'74 - 77',point:2.67},{grade:'C+',range:'70 - 73',point:2.33},
+    {grade:'C',range:'66 - 69',point:2.00},{grade:'C-',range:'62 - 65',point:1.67},{grade:'D+',range:'58 - 61',point:1.33},{grade:'D',range:'55 - 57',point:1.00},{grade:'F',range:'0 - 54',point:0.00}
+  ]},
+  IUBAT:{name:'International University of Business Agriculture and Technology',short:'IUBAT',grades:[
+    {grade:'A+',range:'> 80',point:4.00},{grade:'A',range:'75 - 80',point:3.75},{grade:'A-',range:'70 - 75',point:3.50},
+    {grade:'B+',range:'65 - 70',point:3.25},{grade:'B',range:'60 - 65',point:3.00},{grade:'B-',range:'55 - 60',point:2.75},
+    {grade:'C+',range:'50 - 55',point:2.50},{grade:'C',range:'45 - 50',point:2.25},{grade:'D',range:'40 - 45',point:2.00},{grade:'F',range:'< 40',point:0.00}
+  ]},
+  ULAB:{name:'University of Liberal Arts Bangladesh',short:'ULAB',grades:[
+    {grade:'A+',range:'95 - 100',point:4.00},{grade:'A',range:'90 - 94',point:4.00},{grade:'A-',range:'85 - 89',point:3.80},
+    {grade:'B+',range:'80 - 84',point:3.30},{grade:'B',range:'75 - 79',point:3.00},{grade:'B-',range:'70 - 74',point:2.80},
+    {grade:'C+',range:'65 - 69',point:2.50},{grade:'C',range:'60 - 64',point:2.20},{grade:'D',range:'50 - 59',point:1.50},{grade:'F',range:'0 - 49',point:0.00}
+  ]}
+};
+
+function clonePolicy(policy){
+  return JSON.parse(JSON.stringify(policy));
+}
+
+function getPresetPolicy(key=DEFAULT_POLICY){
+  const presetKey=GRADING_PRESETS[key] ? key : DEFAULT_POLICY;
+  return {preset:presetKey,...clonePolicy(GRADING_PRESETS[presetKey])};
+}
+
+function normalizeGradingPolicy(policy){
+  const fallback=getPresetPolicy();
+  if(!policy || !Array.isArray(policy.grades)) return fallback;
+
+  const grades=policy.grades
+    .map(row=>({
+      grade:String(row.grade || '').trim(),
+      range:String(row.range || '').trim(),
+      point:Number.parseFloat(row.point)
+    }))
+    .filter(row=>row.grade && !Number.isNaN(row.point));
+
+  if(!grades.length) return fallback;
+
+  const presetKey=Object.keys(GRADING_PRESETS).find(key=>key===policy.preset) || 'CUSTOM';
+  const preset=GRADING_PRESETS[presetKey];
+  const matchesPreset=preset && gradesMatchPreset(grades,preset.grades);
+  return {
+    preset:matchesPreset ? presetKey : 'CUSTOM',
+    name:matchesPreset ? preset.name : (policy.name || 'Custom'),
+    short:matchesPreset ? preset.short : (policy.short || 'CUSTOM'),
+    grades
+  };
+}
+
+function getActivePolicy(){
+  data.gradingPolicy=normalizeGradingPolicy(data.gradingPolicy);
+  return data.gradingPolicy;
+}
+
+function getGradeScale(){
+  const scale={};
+  getActivePolicy().grades.forEach(row=>{
+    scale[row.grade]=Number.parseFloat(row.point);
+  });
+  scale.R=0;
+  return scale;
+}
+
+function getGradeOptions(){
+  const grades=getActivePolicy().grades.map(row=>row.grade).filter(Boolean);
+  if(!grades.includes('R')) grades.push('R');
+  return grades;
+}
+
+function updatePolicyBadge(){
+  const badge=document.getElementById('policyBadge');
+  if(badge) badge.textContent=`Grading policy: ${getActivePolicy().short}`;
+}
 
 function normalizeSemesterNames(){
   if(!Array.isArray(data.semesters)) data.semesters=[];
+  data.gradingPolicy=normalizeGradingPolicy(data.gradingPolicy);
   data.semesters.forEach((semester,i)=>{
     semester.name=`Semester ${i+1}`;
     if(!Array.isArray(semester.subjects)) semester.subjects=[];
@@ -777,11 +1160,13 @@ function init(){
   loadTheme();
   updateThemeIcon();
   render();
+  updatePolicyBadge();
 }
 
 const save=()=>{
   normalizeSemesterNames();
   localStorage.setItem(STORAGE,JSON.stringify(data));
+  updatePolicyBadge();
 };
 
 function render(){
@@ -809,7 +1194,7 @@ function render(){
             oninput="update(${i},${j},'name',this.value)">
           <select class="grade-select" onchange="update(${i},${j},'grade',this.value)">
             <option value="" ${!sub.grade?'selected':''}>GRADE</option>
-            ${Object.keys(gradeScale).map(g=>`
+            ${getGradeOptions().map(g=>`
               <option value="${g}" ${sub.grade===g?'selected':''}>${g}</option>`).join('')}
           </select>
           <input type="number" class="credit-input" placeholder="CREDIT" value="${sub.grade === 'R' ? '0' : sub.credit}"
@@ -856,7 +1241,7 @@ function update(i,j,k,v){
 function getSemesterTotals(semester){
   let totalPoints=0,totalCredits=0;
   (semester.subjects || []).forEach(s=>{
-    const gradeValue = gradeScale[s.grade];
+    const gradeValue = getGradeScale()[s.grade];
     const creditValue = s.grade === 'R' ? 0 : parseFloat(s.credit || 0);
 
     if(gradeValue !== undefined && creditValue !== undefined && !isNaN(creditValue)){
@@ -967,6 +1352,116 @@ function loadTheme(){
   document.documentElement.setAttribute('data-theme',savedTheme);
 }
 
+function openSettings(){
+  settingsDraft=clonePolicy(getActivePolicy());
+  renderSettingsPanel();
+  document.getElementById('settingsOverlay').classList.add('active');
+}
+
+function closeSettings(){
+  document.getElementById('settingsOverlay').classList.remove('active');
+}
+
+function renderSettingsPanel(){
+  const presetSelect=document.getElementById('policyPreset');
+  const activePreset=settingsDraft?.preset || 'CUSTOM';
+  presetSelect.innerHTML=[
+    ...Object.entries(GRADING_PRESETS).map(([key,preset])=>
+      `<option value="${key}" ${activePreset===key?'selected':''}>${preset.name}</option>`),
+    `<option value="CUSTOM" ${activePreset==='CUSTOM'?'selected':''}>Custom</option>`
+  ].join('');
+  renderGradeSettingsRows();
+}
+
+function renderGradeSettingsRows(){
+  const rows=document.getElementById('gradeSettingsRows');
+  const grades=(settingsDraft?.grades || []).map((row,index)=>`
+    <div class="grade-setting-row">
+      <input class="setting-input setting-grade" value="${escapeHtml(row.grade)}" oninput="markCustomPolicy()">
+      <input class="setting-input setting-range" value="${escapeHtml(row.range)}" oninput="markCustomPolicy()">
+      <input class="setting-input setting-point" type="number" step="0.01" value="${escapeHtml(String(row.point))}" oninput="markCustomPolicy()">
+      <button class="grade-remove" onclick="removeGradeSettingRow(${index})" title="Remove grade" aria-label="Remove grade"></button>
+    </div>
+  `).join('');
+  rows.innerHTML=grades;
+}
+
+function selectPolicyPreset(key){
+  if(key==='CUSTOM'){
+    markCustomPolicy();
+    return;
+  }
+  settingsDraft=getPresetPolicy(key);
+  renderSettingsPanel();
+}
+
+function markCustomPolicy(){
+  settingsDraft=readSettingsRows();
+  settingsDraft.preset='CUSTOM';
+  settingsDraft.name='Custom';
+  settingsDraft.short='CUSTOM';
+  const presetSelect=document.getElementById('policyPreset');
+  if(presetSelect) presetSelect.value='CUSTOM';
+}
+
+function readSettingsRows(){
+  const rows=[...document.querySelectorAll('.grade-setting-row')];
+  return {
+    preset:settingsDraft?.preset || 'CUSTOM',
+    name:settingsDraft?.name || 'Custom',
+    short:settingsDraft?.short || 'CUSTOM',
+    grades:rows.map(row=>({
+      grade:row.querySelector('.setting-grade').value.trim(),
+      range:row.querySelector('.setting-range').value.trim(),
+      point:Number.parseFloat(row.querySelector('.setting-point').value)
+    })).filter(row=>row.grade && !Number.isNaN(row.point))
+  };
+}
+
+function gradesMatchPreset(grades,presetGrades){
+  if(grades.length!==presetGrades.length) return false;
+  return grades.every((row,index)=>{
+    const preset=presetGrades[index];
+    return row.grade===preset.grade && row.range===preset.range && Number(row.point)===Number(preset.point);
+  });
+}
+
+function addGradeSettingRow(){
+  settingsDraft=readSettingsRows();
+  settingsDraft.preset='CUSTOM';
+  settingsDraft.name='Custom';
+  settingsDraft.short='CUSTOM';
+  settingsDraft.grades.push({grade:'',range:'',point:0});
+  renderSettingsPanel();
+  document.getElementById('policyPreset').value='CUSTOM';
+}
+
+function removeGradeSettingRow(index){
+  settingsDraft=readSettingsRows();
+  settingsDraft.preset='CUSTOM';
+  settingsDraft.name='Custom';
+  settingsDraft.short='CUSTOM';
+  settingsDraft.grades.splice(index,1);
+  renderSettingsPanel();
+  document.getElementById('policyPreset').value='CUSTOM';
+}
+
+function saveGradingSettings(){
+  const selected=document.getElementById('policyPreset').value;
+  const policy=normalizeGradingPolicy(readSettingsRows());
+  const preset=GRADING_PRESETS[selected];
+
+  if(preset && gradesMatchPreset(policy.grades,preset.grades)){
+    data.gradingPolicy=getPresetPolicy(selected);
+  }else{
+    data.gradingPolicy={preset:'CUSTOM',name:'Custom',short:'CUSTOM',grades:policy.grades};
+  }
+
+  save();
+  render();
+  closeSettings();
+}
+
 function resetAll(){
   if(confirm('Are you sure you want to clear all data?')){
     data={semesters:[{
@@ -983,6 +1478,7 @@ function resetAll(){
 }
 
 function exportData(){
+  normalizeSemesterNames();
   const json=JSON.stringify(data,null,2);
   const blob=new Blob([json],{type:'application/json'});
   const url=URL.createObjectURL(blob);
